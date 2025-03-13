@@ -14,10 +14,11 @@ export default function Home() {
       const { latitude, longitude } = position.coords;
       const location = LOCATIONS.find(
         (bbox) =>
-          latitude >= bbox.ax &&
-          latitude <= bbox.bx &&
-          longitude >= bbox.ay &&
-          longitude <= bbox.by
+          bbox.boundingBox &&
+          latitude >= bbox.boundingBox.ax &&
+          latitude <= bbox.boundingBox.bx &&
+          longitude >= bbox.boundingBox.ay &&
+          longitude <= bbox.boundingBox.by
       );
       setUserLocation(location || null);
     });
@@ -26,13 +27,23 @@ export default function Home() {
   return (
     <main className="flex justify-center items-center h-screen">
       <div>
-        {userLocation && (
-          <h1 className="text-5xl font-bold">
-            {userLocation.icon && userLocation.icon} Willkommen
-            {userLocation.prefix ? ` ${userLocation.prefix} ` : ' in '}
-            {userLocation.name}.
-          </h1>
-        )}
+        <h1 className="text-5xl font-bold">
+          {userLocation ? (
+            <>
+              {userLocation.icon && userLocation.icon} Willkommen
+              {userLocation.prefix ? ` ${userLocation.prefix} ` : ' in '}
+              {userLocation.name}.
+            </>
+          ) : (
+            '🚀 Gerade unterwegs?'
+          )}
+        </h1>
+
+        {!userLocation && (
+            <p className="font-semibold mt-2">
+              Oder aktiviere die Standortbestimmung, um deine Abfahrtszeiten zu sehen.
+            </p>
+          )}
       </div>
     </main>
   );
